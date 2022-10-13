@@ -1,8 +1,9 @@
 {
-  "name": "@lc-cn/ts-dev-template",
+  "name": "@zhinjs/cli",
   "version": "1.0.0",
-  "description": "ts开发环境配置",
+  "description": "zhin 脚手架",
   "main": "lib/index.js",
+  "bin": "lib/bin.js",
   "scripts": {
     "start": "node .",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
@@ -12,20 +13,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lc-cn/ts-dev-template.git"
+    "url": "git+https://github.com/zhinjs/cli.git"
   },
   "keywords": [
-    "ts",
-    "dev",
-    "template"
+    "zhin",
+    "cli",
+    "service"
   ],
   "author": "凉菜",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lc-cn/ts-dev-template/issues"
+    "url": "https://github.com/zhinjs/cli/issues"
   },
-  "homepage": "https://github.com/lc-cn/ts-dev-template#readme",
+  "homepage": "https://github.com/zhinjs/cli#readme",
   "devDependencies": {
+    "@types/inquirer": "^9.0.2",
+    "@types/js-yaml": "^4.0.5",
     "@types/node": "latest",
     "ts-node-dev": "latest",
     "tsc-alias": "latest",
@@ -37,5 +40,10 @@
     "/lib/**/*.d.ts",
     "/lib/**/LICENSE"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "axios": "^1.1.2",
+    "cac": "^6.7.14",
+    "inquirer": "~8.2.4",
+    "js-yaml": "^4.1.0"
+  }
 }

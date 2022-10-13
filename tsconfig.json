@@ -4,6 +4,7 @@
     "rootDir": "./src",
     "baseUrl": ".",
     "target": "ES2020",
+    "esModuleInterop": true,
     "module": "commonjs",
     "declaration": true,
     "lib": [
@@ -12,7 +13,7 @@
     ],
     "paths": {
       "@/*": ["src/*"]
-    },
+    }
   },
   "include": ["./src/"]
 }

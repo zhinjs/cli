@@ -1,31 +1,30 @@
-# ts-dev-template
-ts 开发基础配置环境
-## Notice
-这是一个模板仓库，可用于初始化Ts开发时的一些推荐配置
-## Usage
-1.调用模板创建仓库
-```shell
-点击仓库首页右边绿色按钮(Use This Template)或访问https://github.com/lc-cn/ts-dev-template/generate，根据github提示创建仓库
-```
-2.拉取你刚刚创建的仓库(`<>`表示括号内描述的内容为必填)
-```shell
-git clone <你刚刚创建的仓库地址>
-```
-2.安装依赖
-```shell
-npm install
-# 或 npm i
-```
-3.运行开发环境(ts-node-dev运行ts代码)
-```shell
-npm run dev
-```
-4.将ts编译成js(编译代码成普通node可执行的js代码)
-```shell
-npm run build
-```
-5.执行编译后的js(通常生产环境调用)
-```shell
-npm start
-# 或 npm run start
-```
+# @zhinjs/cli
+知音机器人开发脚手架
+## usage
+> 初始化项目 `zhin init`
+1. 打开或新建一个项目文件夹
+2. 在项目文件夹下打开命令行(终端)窗口
+3. 执行`zhin init`
+4. 根据提示录入信息即可完成zhin初始化
+> 启动项目 `zhin start`
+1. 在项目文件夹下打开命令行(终端)窗口
+2. 执行`zhin start`
+3. 等待命令执行完毕即可启动zhin
+> 【可选】添加插件 `zhin new [pluginName]`
+> 
+> 待添加
+> 
+> 若你有自己开发插件的意图，本指令可为你创建一个模板插件
+1. 在项目文件夹下打开命令行(终端)窗口
+2. 执行`zhin new [pluginName]`(请将`[pluginName]`替换为你的插件名)
+3. 默认创建的插件为ts(typescript)语言开发，若你想创建一个js(javascript)插件开发的模板，可添加`--type js`声明其类型为js
+
+>【可选】发布你的插件 `zhin pub [pluginName]`
+> 
+> 在插件开发完毕后，如果你又意愿将插件公开给其他zhin用户使用，可使用该命令将插件发布到https://www.npmjs.com/，供他人下载
+> 
+> 待添加
+> 
+> 注意：若插件名与https://www.npmjs.com/上已有的包名冲突且该包不是你所有，将无法上传
+1. 在项目文件夹下打开命令行(终端)窗口
+2. 执行`zhin pub [pluginName]`(请将`[pluginName]`替换为你的插件名)
