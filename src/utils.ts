@@ -1,5 +1,6 @@
 import path, {resolve} from "path";
-import {existsSync} from "fs";
+import {existsSync, mkdirSync, readFileSync, writeFileSync} from "fs";
+import yaml from "js-yaml";
 export const basePath=process.cwd()
 export function hasPackageJson(){
     return existsSync(resolve(basePath,'package.json'))
@@ -28,3 +29,20 @@ export const defaultConfig={
         }
     },
 }
+export function makeDir(dirDesc:string){
+    if(existsSync(dirDesc)) throw new Error('文件夹已存在')
+    mkdirSync(dirDesc)
+}
+export function saveTo(filePath:string,content:string){
+    if(existsSync(filePath)) throw new Error('文件已存在')
+    writeFileSync(filePath,content,"utf8")
+}
+export function replace(template:string,[key,value]:[string,string]):string{
+    return template.replace(new RegExp(`{{${key}}}`,'gm'),value)
+}
+export function readConfig():Config{
+    const configPath=resolve(process.cwd(),'zhin.yaml')
+    if(!existsSync(configPath)) throw new Error('未找到配置文件，请确实是否正确初始化了zhin')
+    return yaml.load(readFileSync(configPath,'utf8'))
+}
+export type Config=Partial<typeof defaultConfig>

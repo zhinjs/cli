@@ -1,6 +1,6 @@
 {
   "name": "@zhinjs/cli",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "zhin 脚手架",
   "main": "lib/index.js",
   "bin": "lib/bin.js",
@@ -31,9 +31,9 @@
     "@types/js-yaml": "^4.0.5",
     "@types/node": "latest",
     "ts-node-dev": "latest",
-    "tsc-alias": "latest",
-    "tsconfig-paths": "latest",
-    "typescript": "latest"
+    "tsc-alias": "^1.7.0",
+    "tsconfig-paths": "^4.1.0",
+    "typescript": "^4.8.4"
   },
   "files": [
     "/lib/**/*.js",

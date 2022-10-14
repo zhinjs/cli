@@ -5,7 +5,7 @@ import {execSync} from "child_process";
 import yaml from 'js-yaml'
 import axios from "axios";
 import inquirer,{DistinctQuestion} from 'inquirer'
-import {hasPackageJson, defaultConfig, basePath} from "@/utils";
+import {hasPackageJson, defaultConfig, basePath, makeDir} from "@/utils";
 interface AuthorInfo{
     name:string
     username:string
@@ -25,10 +25,6 @@ export interface AvatarInfo{
 interface PublisherInfo{
     avatars:AvatarInfo
     name:string
-}
-interface Pagination{
-    perPage:number
-    page:number
 }
 
 interface Package{
@@ -51,7 +47,7 @@ interface Result{
     total:number
 }
 const dependencies=['zhin']
-const devDependencies=['@types/koa']
+const devDependencies=['@types/koa','tsc-alias','typescript','tsconfig-paths']
 const questions:DistinctQuestion[]=[
     {
         type:'number',
@@ -133,9 +129,11 @@ export default function registerInitCommand(cli:CAC){
             writeFileSync(configPath,yaml.dump(mergedConfig),'utf8')
             console.log('正在安装项目依赖')
             // 装项目运行依赖
-            execSync(`npm install ${dependencies.join(' ')} S`,{cwd:basePath,stdio:[0,1,2]})
+            execSync(`npm install ${dependencies.join(' ')} --save`,{cwd:basePath,stdio:[0,1,2]})
             // 装开发依赖
-            execSync(`npm install ${devDependencies.join(' ')} D`,{cwd:basePath,stdio:[0,1,2]})
+            execSync(`npm install ${devDependencies.join(' ')} --save-dev`,{cwd:basePath,stdio:[0,1,2]})
+            // 建插件目录
+            makeDir(resolve(basePath,config.plugin_dir))
             console.log(`zhin初始化完成. 请使用 zhin start 启动项目`)
         })
 }
