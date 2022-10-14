@@ -5,7 +5,7 @@ import {resolve} from "path";
 import {existsSync, readFileSync, writeFileSync} from "fs";
 
 export function registerPubPluginCommand(cli:CAC){
-    cli.command('pub [pluginName]','编译插件')
+    cli.command('pub [pluginName]','发布插件')
         .action(async (pluginName)=>{
             try{
                 const config=readConfig()
