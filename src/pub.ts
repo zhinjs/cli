@@ -10,7 +10,7 @@ export function registerPubPluginCommand(cli:CAC){
             try{
                 const config=readConfig()
                 await transformPackageJson(resolve(basePath,config.plugin_dir,pluginName,'package.json'))
-                await execSync(`cd plugins/${pluginName} && npm run pub`,{cwd:basePath,stdio:[0,1,2]})
+                await execSync(`cd ${config.plugin_dir}/${pluginName} && npm run pub`,{cwd:basePath,stdio:[0,1,2]})
                 await restorePackageJson(resolve(basePath,config.plugin_dir,pluginName,'package.json'))
             }catch (e){
                 console.error('发布失败，错误信息：',e.message)
