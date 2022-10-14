@@ -8,14 +8,17 @@ export function hasPackageJson(){
 export const defaultConfig={
     uin:1472558369,
     password: '你的密码',
-    plugins:{},
+    plugins:{
+        help: null,
+        daemon: null,
+        watcher:basePath
+    },
     log_level:'info',
     plugin_dir:path.join(basePath,'plugins'),
     data_dir:path.join(basePath,'data'),
     delay:{},
     logConfig:{
         appenders: {
-            console:{type:'console'},
             zhin: {
                 type:'file',
                 filename:path.join(basePath,'logs.log')
@@ -23,18 +26,18 @@ export const defaultConfig={
         },
         categories:{
             zhin:{
-                appenders:['console','zhin'],
+                appenders:['zhin'],
                 level:'info'
             }
         }
     },
 }
 export function makeDir(dirDesc:string){
-    if(existsSync(dirDesc)) throw new Error('文件夹已存在')
+    if(existsSync(dirDesc)) throw new Error(`文件夹(${dirDesc})已存在`)
     mkdirSync(dirDesc)
 }
 export function saveTo(filePath:string,content:string){
-    if(existsSync(filePath)) throw new Error('文件已存在')
+    if(existsSync(filePath)) throw new Error(`文件(${filePath})已存在`)
     writeFileSync(filePath,content,"utf8")
 }
 export function replace(template:string,[key,value]:[string,string]):string{

@@ -71,7 +71,8 @@ export const name='{{name}}';
 export function install (this:Plugin,bot:Bot){
     // 在这儿实现你的插件逻辑
     // 功能样例：
-    /* 1.定义指令
+    //1.定义指令
+    /*
     bot.command('test')
         .option('foo','-f <bar:string>')
         .action(({event,options})=>{
@@ -79,25 +80,29 @@ export function install (this:Plugin,bot:Bot){
             return 'hello world'
         })
     */
-    /* 2.定义中间件
+    // 2.定义中间件
+    /*
     bot.middleware(async (event,next)=>{
         if(true){ //需要判断的条件
-            //逻辑执行代码
+        //逻辑执行代码
         }else{
             next() // 不next，则不会流入下一个中间件
         }
     });
     */
-    /* 3. 监听事件
+    // 3. 监听事件
+    /*
     bot.on(eventName,callback);
     bot.once(eventName,callback);
     bot.on(eventName,callback);
     */
-    /* 4. 定义服务
+    // 4. 定义服务
+    /*
     bot.service('serviceName'，{}) // 往bot上添加可全局访问的属性
     */
-    /* 5. 添加自定插件副作用(在插件卸载时需要执行的代码)
+    // 5. 添加自定插件副作用(在插件卸载时需要执行的代码)
     // 如果不需要，可以不return
+    /*
     return ()=>{
         // 如果你使用过react的useEffect 那你应该知道这是在干嘛
         // 函数内容将会在插件卸载时自动卸载
@@ -125,7 +130,8 @@ templateMap.set('js',{
     install(bot){
         // 在这儿实现你的插件逻辑
         // 功能样例：
-        /* 1.定义指令
+        // 1.定义指令
+        /*
         bot.command('test')
             .option('foo','-f <bar:string>')
             .action(({event,options})=>{
@@ -133,7 +139,8 @@ templateMap.set('js',{
                 return 'hello world'
             })
         */
-        /* 2.定义中间件
+        // 2.定义中间件
+        /*
         bot.middleware(async (event,next)=>{
             if(true){ //需要判断的条件
             //逻辑执行代码
@@ -142,16 +149,19 @@ templateMap.set('js',{
             }
         });
         */
-        /* 3. 监听事件
+        // 3. 监听事件
+        /*
         bot.on(eventName,callback);
         bot.once(eventName,callback);
         bot.on(eventName,callback);
         */
-        /* 4. 定义服务
+        // 4. 定义服务
+        /*
         bot.service('serviceName'，{}) // 往bot上添加可全局访问的属性
         */
-        /* 5. 添加自定插件副作用(在插件卸载时需要执行的代码)
+        // 5. 添加自定插件副作用(在插件卸载时需要执行的代码)
         // 如果不需要，可以不return
+        /*
         return ()=>{
             // 如果你使用过react的useEffect 那你应该知道这是在干嘛
             // 函数内容将会在插件卸载时自动卸载

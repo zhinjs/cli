@@ -1,6 +1,6 @@
 {
   "name": "@zhinjs/cli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "zhin 脚手架",
   "main": "lib/index.js",
   "bin": "lib/bin.js",
@@ -29,6 +29,7 @@
   "devDependencies": {
     "@types/inquirer": "^9.0.2",
     "@types/js-yaml": "^4.0.5",
+    "@types/koa": "^2.13.5",
     "@types/node": "latest",
     "ts-node-dev": "latest",
     "tsc-alias": "^1.7.0",
@@ -44,6 +45,7 @@
     "axios": "^1.1.2",
     "cac": "^6.7.14",
     "inquirer": "~8.2.4",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "zhin": "^1.1.57"
   }
 }

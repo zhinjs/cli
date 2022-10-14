@@ -130,6 +130,7 @@ export default function registerInitCommand(cli:CAC){
             console.log('正在安装项目依赖')
             // 装项目运行依赖
             execSync(`npm install ${dependencies.join(' ')} --save`,{cwd:basePath,stdio:[0,1,2]})
+            console.log('正在安装开发环境依赖')
             // 装开发依赖
             execSync(`npm install ${devDependencies.join(' ')} --save-dev`,{cwd:basePath,stdio:[0,1,2]})
             // 建插件目录
