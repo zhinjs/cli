@@ -93,6 +93,12 @@ const questions:DistinctQuestion[]=[
         ]
     },
     {
+        type:'number',
+        message:'填写机器人拥有者qq，(该qq有操作机器人的所有权限)',
+        name:'master',
+        default:'1659488338'
+    },
+    {
         type:'input',
         message:'定义插件存放目录(基于项目根目录的相对路径)',
         default:'plugins',
@@ -115,27 +121,36 @@ async function getPackages(){
     return result
 }
 export default function registerInitCommand(cli:CAC){
-    cli.command('init','初始化zhin')
-        .action(async ()=>{
-            if(!hasPackageJson()){
-                await initProject()
+    cli.command('init [projectName]','初始化zhin')
+        .action(async (projectName)=>{
+            let projectPath=basePath
+            if(projectName){
+                await makeDir(projectName)
+                projectPath+=`/${projectName}`
+            }
+            if(!hasPackageJson(projectPath)){
+                await initProject(projectPath)
             }
             const {isPwdLogin,...config}=await inquirer.prompt(questions)
             await choosePlugins()
             const mergedConfig=Object.assign({...defaultConfig},config)
-            const configPath=resolve(basePath,'zhin.yaml')
+            const configPath=resolve(projectPath,'zhin.yaml')
             console.log('配置文件已保存到:'+configPath)
             // 存配置
             writeFileSync(configPath,yaml.dump(mergedConfig),'utf8')
             console.log('正在安装项目依赖')
             // 装项目运行依赖
-            execSync(`npm install ${dependencies.join(' ')} --save`,{cwd:basePath,stdio:[0,1,2]})
+            execSync(`npm install ${dependencies.join(' ')} --save`,{cwd:projectPath,stdio:[0,1,2]})
             console.log('正在安装开发环境依赖')
             // 装开发依赖
-            execSync(`npm install ${devDependencies.join(' ')} --save-dev`,{cwd:basePath,stdio:[0,1,2]})
+            execSync(`npm install ${devDependencies.join(' ')} --save-dev`,{cwd:projectPath,stdio:[0,1,2]})
             // 建插件目录
-            makeDir(resolve(basePath,config.plugin_dir))
-            console.log(`zhin初始化完成. 请使用 zhin start 启动项目`)
+            makeDir(resolve(projectPath,config.plugin_dir))
+            console.log(`zhin初始化完成,请使用以下命令启动zhin`)
+            if(projectName){
+                console.log(`cd ${projectName}`)
+            }
+            console.log(`zhin start`)
         })
 }
 async function choosePlugins(){
@@ -164,14 +179,14 @@ function onCancel(){
     console.log('终止操作:用户取消')
     process.exit()
 }
-export async function initProject(){
+export async function initProject(projectPath){
     const {confirmInit}=await inquirer.prompt({
         type:'confirm',
         name:'confirmInit',
         message:'未找到package.json,是否为您创建？'
     })
     if(confirmInit){
-        execSync('npm init -y',{env:{executePath:basePath}})
+        execSync('npm init -y',{env:{executePath:projectPath}})
     }else{
         throw new Error('终止操作：请手动初始化package.json后重新执行指令')
     }

@@ -3,7 +3,7 @@ import {execSync} from "child_process";
 import {basePath, readConfig} from "@/utils";
 
 export function registerBuildPluginCommand(cli:CAC){
-    cli.command('build [pluginName]','编译插件')
+    cli.command('build <pluginName>','编译插件')
         .action(async (pluginName)=>{
             try{
                 const config=await readConfig()

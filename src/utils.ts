@@ -2,8 +2,8 @@ import path, {resolve} from "path";
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from "fs";
 import yaml from "js-yaml";
 export const basePath=process.cwd()
-export function hasPackageJson(){
-    return existsSync(resolve(basePath,'package.json'))
+export function hasPackageJson(projectPath){
+    return existsSync(resolve(projectPath,'package.json'))
 }
 export const defaultConfig={
     uin:1472558369,
