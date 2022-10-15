@@ -1,11 +1,12 @@
 {
   "name": "@zhinjs/cli",
-  "version": "0.0.7",
+  "version": "0.1.2",
   "description": "zhin 脚手架",
-  "main": "lib/index.js",
-  "bin": "lib/bin.js",
+  "bin": {
+    "zhin": "lib/index.js"
+  },
   "scripts": {
-    "start": "node .",
+    "start": "zhin start",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "dev": "ts-node-dev -r tsconfig-paths/register ./src/index.ts",
     "pub": "npm publish --access public",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@types/inquirer": "^9.0.2",
     "@types/js-yaml": "^4.0.5",
+    "@types/koa": "^2.13.5",
     "@types/node": "latest",
     "ts-node-dev": "latest",
     "tsc-alias": "^1.7.0",

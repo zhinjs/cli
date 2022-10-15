@@ -1,11 +1,11 @@
 import {CAC} from "cac";
 import {resolve} from "path";
 import {writeFileSync} from 'fs'
-import {execSync} from "child_process";
+import {ChildProcess, exec} from "child_process";
 import yaml from 'js-yaml'
 import axios from "axios";
 import inquirer,{DistinctQuestion} from 'inquirer'
-import {hasPackageJson, defaultConfig, basePath, makeDir} from "@/utils";
+import {hasPackageJson, defaultConfig, basePath, makeDir, saveTo, promisify} from "@/utils";
 interface AuthorInfo{
     name:string
     username:string
@@ -51,7 +51,7 @@ const devDependencies=['@types/koa','tsc-alias','typescript','tsconfig-paths']
 const questions:DistinctQuestion[]=[
     {
         type:'number',
-        message:'请输入登录账号',
+        message:'请输入机器人登录qq',
         name:'uin'
     },{
         type:'confirm',
@@ -63,7 +63,7 @@ const questions:DistinctQuestion[]=[
         when:(answers)=>answers.isPwdLogin,
         name:'password',
         default:'',
-        message:'请输入登录密码'
+        message:'请输入机器人登录密码'
     },{
         type:'list',
         default:4,
@@ -94,9 +94,9 @@ const questions:DistinctQuestion[]=[
     },
     {
         type:'number',
-        message:'填写机器人拥有者qq，(该qq有操作机器人的所有权限)',
+        message:'填写机器人主人qq，(一般是你自己的qq)',
         name:'master',
-        default:'1659488338'
+        default:1659488338
     },
     {
         type:'input',
@@ -117,7 +117,6 @@ async function getPackages(){
         total=searchResult.total
         result.push(...searchResult.objects.map(obj=>obj.package))
     }while (total>result.length)
-    console.log(result)
     return result
 }
 export default function registerInitCommand(cli:CAC){
@@ -131,6 +130,14 @@ export default function registerInitCommand(cli:CAC){
             if(!hasPackageJson(projectPath)){
                 await initProject(projectPath)
             }
+            const packageJson=require(resolve(projectPath,'package.json'))
+            if(!packageJson.scripts) packageJson.scripts={
+                "start:zhin":"start-zhin"
+            };
+            else{
+                packageJson.scripts['start:zhin']="start-zhin"
+            }
+            saveTo(resolve(projectPath,'package.json'),JSON.stringify(packageJson,null,4))
             const {isPwdLogin,...config}=await inquirer.prompt(questions)
             await choosePlugins()
             const mergedConfig=Object.assign({...defaultConfig},config)
@@ -140,10 +147,10 @@ export default function registerInitCommand(cli:CAC){
             writeFileSync(configPath,yaml.dump(mergedConfig),'utf8')
             console.log('正在安装项目依赖')
             // 装项目运行依赖
-            execSync(`npm install ${dependencies.join(' ')} --save`,{cwd:projectPath,stdio:[0,1,2]})
+            await promisify(exec(`npm install ${dependencies.join(' ')} --save`,{cwd:projectPath}))
             console.log('正在安装开发环境依赖')
             // 装开发依赖
-            execSync(`npm install ${devDependencies.join(' ')} --save-dev`,{cwd:projectPath,stdio:[0,1,2]})
+            await promisify(exec(`npm install ${devDependencies.join(' ')} --save-dev`,{cwd:projectPath}))
             // 建插件目录
             makeDir(resolve(projectPath,config.plugin_dir))
             console.log(`zhin初始化完成,请使用以下命令启动zhin`)
@@ -186,7 +193,7 @@ export async function initProject(projectPath){
         message:'未找到package.json,是否为您创建？'
     })
     if(confirmInit){
-        execSync('npm init -y',{env:{executePath:projectPath}})
+        await promisify(exec('npm init -y',{cwd:projectPath}))
     }else{
         throw new Error('终止操作：请手动初始化package.json后重新执行指令')
     }

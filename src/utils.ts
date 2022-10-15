@@ -1,6 +1,7 @@
 import path, {resolve} from "path";
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from "fs";
 import yaml from "js-yaml";
+import {ChildProcess} from "child_process";
 export const basePath=process.cwd()
 export function hasPackageJson(projectPath){
     return existsSync(resolve(projectPath,'package.json'))
@@ -19,15 +20,18 @@ export const defaultConfig={
     delay:{},
     logConfig:{
         appenders: {
-            zhin: {
+            consoleOut:{
+                type: 'console'
+            },
+            saveFile: {
                 type:'file',
-                filename:path.join(basePath,'logs.log')
+                filename:path.join(process.cwd(),'logs.log')
             }
         },
-        categories:{
-            zhin:{
-                appenders:['zhin'],
-                level:'info'
+        categories: {
+            zhin: {
+                appenders: ['consoleOut', 'saveFile'],
+                level: 'info'
             }
         }
     },
@@ -37,7 +41,6 @@ export function makeDir(dirDesc:string){
     mkdirSync(dirDesc)
 }
 export function saveTo(filePath:string,content:string){
-    if(existsSync(filePath)) throw new Error(`文件(${filePath})已存在`)
     writeFileSync(filePath,content,"utf8")
 }
 export function replace(template:string,[key,value]:[string,string]):string{
@@ -49,3 +52,11 @@ export function readConfig():Config{
     return yaml.load(readFileSync(configPath,'utf8'))
 }
 export type Config=Partial<typeof defaultConfig>
+
+export async function promisify(cp:ChildProcess){
+    return new Promise((res)=>{
+        cp.stdout.on('data',(data)=>console.log(data))
+        cp.stderr.on('data',(data)=>console.error(data))
+        cp.on('exit',res)
+    })
+}
