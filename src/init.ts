@@ -50,6 +50,35 @@ const dependencies=['zhin']
 const devDependencies=['@types/koa','tsc-alias','typescript','tsconfig-paths']
 const questions:DistinctQuestion[]=[
     {
+        type:'input',
+        message:'定义插件存放目录(基于项目根目录的相对路径)',
+        default:'plugins',
+        name:'plugin_dir'
+    },{
+        type:'input',
+        message:'定义数据存放目录(基于项目根目录的相对路径)',
+        default:'data',
+        name:'data_dir'
+    },{
+        type:'list',
+        message:'选择适配器',
+        default:'oicq',
+        name:'adapter',
+        choices:[
+            {
+                name:'oicq(内置)，已完成开发',
+                value:'oicq'
+            },
+            {
+                name:'OneBot V12(内置)，开发中',
+                disabled:true,
+                value:'onebot'
+            },
+        ]
+    }
+]
+const oicqQuestions:DistinctQuestion[]=[
+    {
         type:'number',
         message:'请输入机器人登录qq',
         name:'uin'
@@ -84,7 +113,7 @@ const questions:DistinctQuestion[]=[
             },
             {
                 name:'macos',
-                value:3
+                value:4
             },
             {
                 name:'iPad',
@@ -97,17 +126,6 @@ const questions:DistinctQuestion[]=[
         message:'填写机器人主人qq，(一般是你自己的qq)',
         name:'master',
         default:1659488338
-    },
-    {
-        type:'input',
-        message:'定义插件存放目录(基于项目根目录的相对路径)',
-        default:'plugins',
-        name:'plugin_dir'
-    },{
-        type:'input',
-        message:'定义数据存放目录(基于项目根目录的相对路径)',
-        default:'data',
-        name:'data_dir'
     }
 ]
 async function getPackages(){
@@ -138,7 +156,13 @@ export default function registerInitCommand(cli:CAC){
                 packageJson.scripts['start:zhin']="start-zhin"
             }
             saveTo(resolve(projectPath,'package.json'),JSON.stringify(packageJson,null,4))
-            const {isPwdLogin,...config}=await inquirer.prompt(questions)
+            const {adapter,...config}=await inquirer.prompt(questions)
+            if(adapter==='oicq'){
+                const {isPwdLogin,...firstConfig}=await inquirer.prompt(oicqQuestions)
+                config.adapters={
+                    bots:[firstConfig]
+                }
+            }
             await choosePlugins()
             const mergedConfig=Object.assign({...defaultConfig},config)
             const configPath=resolve(projectPath,'zhin.yaml')
