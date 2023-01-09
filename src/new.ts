@@ -1,7 +1,5 @@
 import {CAC} from "cac";
 import {resolve} from "path";
-import {existsSync, readFileSync, mkdirSync, writeFileSync} from "fs";
-import yaml from "js-yaml";
 import {Config, makeDir, readConfig, replace, saveTo} from "@/utils";
 
 export interface BasePackage {
@@ -66,14 +64,14 @@ templateMap.set('ts',{
         },
         include: ["./src/"]
     },
-    index:`import {Plugin,Bot} from 'zhin';
+    index:`import {Plugin,App} from 'zhin';
 export const name='{{name}}';
-export function install (this:Plugin,bot:Bot){
+export function install (this:Plugin,app:App){
     // 在这儿实现你的插件逻辑
     // 功能样例：
     //1.定义指令
     /*
-    bot.command('test')
+    app.command('test')
         .option('foo','-f <bar:string>')
         .action(({event,options})=>{
             console.log('options',options);
@@ -82,7 +80,7 @@ export function install (this:Plugin,bot:Bot){
     */
     // 2.定义中间件
     /*
-    bot.middleware(async (event,next)=>{
+    app.middleware(async (event,next)=>{
         if(true){ //需要判断的条件
         //逻辑执行代码
         }else{
@@ -92,13 +90,13 @@ export function install (this:Plugin,bot:Bot){
     */
     // 3. 监听事件
     /*
-    bot.on(eventName,callback);
-    bot.once(eventName,callback);
-    bot.on(eventName,callback);
+    app.on(eventName,callback);
+    app.once(eventName,callback);
+    app.on(eventName,callback);
     */
     // 4. 定义服务
     /*
-    bot.service('serviceName'，{}) // 往bot上添加可全局访问的属性
+    app.service('serviceName'，{}) // 往bot上添加可全局访问的属性
     */
     // 5. 添加自定插件副作用(在插件卸载时需要执行的代码)
     // 如果不需要，可以不return
@@ -127,12 +125,12 @@ templateMap.set('js',{
     },
     index:`module.exports={
     name:'{{name}}',
-    install(bot){
+    install(app){
         // 在这儿实现你的插件逻辑
         // 功能样例：
         // 1.定义指令
         /*
-        bot.command('test')
+        app.command('test')
             .option('foo','-f <bar:string>')
             .action(({event,options})=>{
                 console.log('options',options);
@@ -141,7 +139,7 @@ templateMap.set('js',{
         */
         // 2.定义中间件
         /*
-        bot.middleware(async (event,next)=>{
+        app.middleware(async (event,next)=>{
             if(true){ //需要判断的条件
             //逻辑执行代码
             }else{
@@ -151,13 +149,13 @@ templateMap.set('js',{
         */
         // 3. 监听事件
         /*
-        bot.on(eventName,callback);
-        bot.once(eventName,callback);
-        bot.on(eventName,callback);
+        app.on(eventName,callback);
+        app.once(eventName,callback);
+        app.on(eventName,callback);
         */
         // 4. 定义服务
         /*
-        bot.service('serviceName'，{}) // 往bot上添加可全局访问的属性
+        app.service('serviceName'，{}) // 往bot上添加可全局访问的属性
         */
         // 5. 添加自定插件副作用(在插件卸载时需要执行的代码)
         // 如果不需要，可以不return

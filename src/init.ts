@@ -1,7 +1,7 @@
 import {CAC} from "cac";
 import {resolve} from "path";
 import {writeFileSync} from 'fs'
-import {ChildProcess, exec} from "child_process";
+import {exec} from "child_process";
 import yaml from 'js-yaml'
 import axios from "axios";
 import inquirer,{DistinctQuestion} from 'inquirer'

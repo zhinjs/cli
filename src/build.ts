@@ -1,5 +1,5 @@
 import {CAC} from "cac";
-import {exec, execSync} from "child_process";
+import {exec} from "child_process";
 import {basePath, promisify, readConfig} from "@/utils";
 
 export function registerBuildPluginCommand(cli:CAC){
