@@ -160,7 +160,9 @@ export default function registerInitCommand(cli:CAC){
             if(adapter==='oicq'){
                 const {isPwdLogin,...firstConfig}=await inquirer.prompt(oicqQuestions)
                 config.adapters={
-                    bots:[firstConfig]
+                    oicq:{
+                        bots:[firstConfig]
+                    }
                 }
             }
             await choosePlugins()
