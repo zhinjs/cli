@@ -7,17 +7,27 @@ export function hasPackageJson(projectPath){
     return existsSync(resolve(projectPath,'package.json'))
 }
 export const defaultConfig={
-    uin:1472558369,
-    password: '你的密码',
+    adapters:{
+        oicq:{
+            bots:[]
+        }
+    },
     plugins:{
-        help: null,
+        config: null,
         daemon: null,
+        help: null,
+        login: null,
+        logs: null,
+        plugin: null,
+        status: null,
         watcher:basePath
     },
     log_level:'info',
     plugin_dir:path.join(basePath,'plugins'),
     data_dir:path.join(basePath,'data'),
-    delay:{},
+    delay:{
+        prompt:60000
+    },
     logConfig:{
         appenders: {
             consoleOut:{
