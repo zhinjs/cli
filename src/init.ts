@@ -70,12 +70,96 @@ const questions:DistinctQuestion[]=[
                 value:'oicq'
             },
             {
-                name:'OneBot V12(内置)，开发中',
-                disabled:true,
+                name:'OneBot V12(内置)，已完成开发',
                 value:'onebot'
             },
         ]
     }
+]
+const onebotQuestions:DistinctQuestion[]=[
+    {
+        type:'list',
+        message:'请选择通信方式',
+        name:'type',
+        choices:[
+            {
+                name:'HTTP（接受事件有延迟）',
+                value:'http'
+            },
+            {
+                name:'Webhook（发起动作有延迟）',
+                value:'webhook'
+            },
+            {
+                name:'Websocket',
+                value:'ws'
+            },
+            {
+                name:'WebsocketReverse',
+                value:'ws_reverse'
+            },
+        ]
+    },
+    {
+        type:'input',
+        name:'url',
+        when:(answers)=>['http','ws'].includes(answers.type),
+        message:'请输入服务端连接地址'
+    },
+    {
+        type:'input',
+        name:'self_id',
+        when:(answers)=>['http','ws'].includes(answers.type),
+        message:'请输入机器人唯一标识'
+    },
+    {
+        type:'number',
+        name:'get_events_interval',
+        when:(answers)=>['http'].includes(answers.type),
+        message:'请输入轮询事件间隔时间（毫秒）',
+        default:3000
+    },
+    {
+        type:'number',
+        name:'events_buffer_size',
+        when:(answers)=>['http'].includes(answers.type),
+        message:'请输入事件缓冲区大小',
+        default:10,
+    },
+    {
+        type:'number',
+        name:'timeout',
+        when:(answers)=>['http'].includes(answers.type),
+        message:'请输入请求超时时间（毫秒）',
+        default:60000,
+    },
+    {
+        type:'input',
+        name:'path',
+        when:(answers)=>['webhook','ws_reverse'].includes(answers.type),
+        message:'请输入服务监听路径(/开头)',
+        default:(answers)=>answers.type==='webhook'?'/onebot/webhook':'/onebot/ws/12'
+    },
+    {
+        type:'input',
+        name:'self_id_key',
+        when:(answers)=>['webhook','ws_reverse'].includes(answers.type),
+        message:'请输入机器人唯一标识键名',
+        default:'self_id'
+    },
+    {
+        type:'input',
+        name:'get_actions_path',
+        when:(answers)=>['webhook','ws_reverse'].includes(answers.type),
+        message:'请输入协议端可获取动作的请求路径(基于服务监听路径)',
+        default:'/get_latest_actions'
+    },
+    {
+        type:'input',
+        name:'access_token',
+        when:(answers)=>['http','ws'].includes(answers.type),
+        message:'请输入access_token(如果有)'
+    },
 ]
 const oicqQuestions:DistinctQuestion[]=[
     {
@@ -161,6 +245,13 @@ export default function registerInitCommand(cli:CAC){
                 const {isPwdLogin,...firstConfig}=await inquirer.prompt(oicqQuestions)
                 config.adapters={
                     oicq:{
+                        bots:[firstConfig]
+                    }
+                }
+            }else if(adapter==='onebot'){
+                const {...firstConfig}=await inquirer.prompt(onebotQuestions)
+                config.adapters={
+                    onebot:{
                         bots:[firstConfig]
                     }
                 }
