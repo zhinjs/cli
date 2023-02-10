@@ -64,14 +64,14 @@ templateMap.set('ts',{
         },
         include: ["./src/"]
     },
-    index:`import {Plugin,App} from 'zhin';
+    index:`import {Plugin,Contenxt} from 'zhin';
 export const name='{{name}}';
-export function install (this:Plugin,app:App){
+export function install (this:Plugin,ctx:Contenxt){
     // 在这儿实现你的插件逻辑
     // 功能样例：
     //1.定义指令
     /*
-    app.command('test')
+    ctx.command('test')
         .option('foo','-f <bar:string>')
         .action(({event,options})=>{
             console.log('options',options);
@@ -80,7 +80,7 @@ export function install (this:Plugin,app:App){
     */
     // 2.定义中间件
     /*
-    app.middleware(async (event,next)=>{
+    ctx.middleware(async (event,next)=>{
         if(true){ //需要判断的条件
         //逻辑执行代码
         }else{
@@ -90,13 +90,13 @@ export function install (this:Plugin,app:App){
     */
     // 3. 监听事件
     /*
-    app.on(eventName,callback);
-    app.once(eventName,callback);
-    app.on(eventName,callback);
+    ctx.on(eventName,callback);
+    ctx.once(eventName,callback);
+    ctx.on(eventName,callback);
     */
     // 4. 定义服务
     /*
-    app.service('serviceName'，{}) // 往bot上添加可全局访问的属性
+    ctx.service('serviceName'，{}) // 往bot上添加可全局访问的属性
     */
     // 5. 添加自定插件副作用(在插件卸载时需要执行的代码)
     // 如果不需要，可以不return
@@ -125,12 +125,12 @@ templateMap.set('js',{
     },
     index:`module.exports={
     name:'{{name}}',
-    install(app){
+    install(ctx){
         // 在这儿实现你的插件逻辑
         // 功能样例：
         // 1.定义指令
         /*
-        app.command('test')
+        ctx.command('test')
             .option('foo','-f <bar:string>')
             .action(({event,options})=>{
                 console.log('options',options);
@@ -139,7 +139,7 @@ templateMap.set('js',{
         */
         // 2.定义中间件
         /*
-        app.middleware(async (event,next)=>{
+        ctx.middleware(async (event,next)=>{
             if(true){ //需要判断的条件
             //逻辑执行代码
             }else{
@@ -149,13 +149,13 @@ templateMap.set('js',{
         */
         // 3. 监听事件
         /*
-        app.on(eventName,callback);
-        app.once(eventName,callback);
-        app.on(eventName,callback);
+        ctx.on(eventName,callback);
+        ctx.once(eventName,callback);
+        ctx.on(eventName,callback);
         */
         // 4. 定义服务
         /*
-        app.service('serviceName'，{}) // 往bot上添加可全局访问的属性
+        ctx.service('serviceName'，{}) // 往bot上添加可全局访问的属性
         */
         // 5. 添加自定插件副作用(在插件卸载时需要执行的代码)
         // 如果不需要，可以不return

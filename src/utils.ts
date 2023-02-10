@@ -8,14 +8,14 @@ export function hasPackageJson(projectPath){
 }
 export const defaultConfig={
     adapters:{
-        oicq:{
+        icqq:{
             bots:[]
         }
     },
     plugins:{
+        help: null,
         config: null,
         daemon: null,
-        help: null,
         login: null,
         logs: null,
         plugin: null,
@@ -27,24 +27,7 @@ export const defaultConfig={
     data_dir:path.join(basePath,'data'),
     delay:{
         prompt:60000
-    },
-    logConfig:{
-        appenders: {
-            consoleOut:{
-                type: 'console'
-            },
-            saveFile: {
-                type:'file',
-                filename:path.join(process.cwd(),'logs.log')
-            }
-        },
-        categories: {
-            zhin: {
-                appenders: ['consoleOut', 'saveFile'],
-                level: 'info'
-            }
-        }
-    },
+    }
 }
 export function makeDir(dirDesc:string){
     if(existsSync(dirDesc)) throw new Error(`文件夹(${dirDesc})已存在`)

@@ -62,17 +62,13 @@ const questions:DistinctQuestion[]=[
     },{
         type:'list',
         message:'选择适配器',
-        default:'oicq',
+        default:'icqq',
         name:'adapter',
         choices:[
             {
-                name:'oicq(内置)，已完成开发',
-                value:'oicq'
-            },
-            {
-                name:'OneBot V12(内置)，已完成开发',
-                value:'onebot'
-            },
+                name:'icqq(内置)，已完成开发',
+                value:'icqq'
+            }
         ]
     }
 ]
@@ -161,7 +157,7 @@ const onebotQuestions:DistinctQuestion[]=[
         message:'请输入access_token(如果有)'
     },
 ]
-const oicqQuestions:DistinctQuestion[]=[
+const icqqQuestions:DistinctQuestion[]=[
     {
         type:'number',
         message:'请输入机器人登录qq',
@@ -241,10 +237,10 @@ export default function registerInitCommand(cli:CAC){
             }
             saveTo(resolve(projectPath,'package.json'),JSON.stringify(packageJson,null,4))
             const {adapter,...config}=await inquirer.prompt(questions)
-            if(adapter==='oicq'){
-                const {isPwdLogin,...firstConfig}=await inquirer.prompt(oicqQuestions)
+            if(adapter==='icqq'){
+                const {isPwdLogin,...firstConfig}=await inquirer.prompt(icqqQuestions)
                 config.adapters={
-                    oicq:{
+                    icqq:{
                         bots:[firstConfig]
                     }
                 }
