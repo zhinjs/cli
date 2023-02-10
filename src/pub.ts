@@ -1,6 +1,6 @@
 import {CAC} from "cac";
-import {exec} from "child_process";
-import {basePath,promisify, readConfig} from "@/utils";
+import {exec, execSync} from "child_process";
+import {basePath, readConfig} from "@/utils";
 import {resolve} from "path";
 import {existsSync, readFileSync, writeFileSync} from "fs";
 
@@ -10,7 +10,7 @@ export function registerPubPluginCommand(cli:CAC){
             try{
                 const config=readConfig()
                 await transformPackageJson(resolve(basePath,config.plugin_dir,pluginName,'package.json'))
-                await promisify(exec(`cd ${config.plugin_dir}/${pluginName} && npm run pub`,{cwd:basePath}))
+                execSync(`cd ${config.plugin_dir}/${pluginName} && npm run pub`,{cwd:basePath})
                 await restorePackageJson(resolve(basePath,config.plugin_dir,pluginName,'package.json'))
             }catch (e){
                 console.error('发布失败，错误信息：',e.message)

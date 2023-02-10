@@ -1,16 +1,13 @@
 import {CAC} from "cac";
-import {basePath, promisify} from "@/utils";
-import {exec} from "child_process";
+import {spawn} from "child_process";
 
 export default function registerStartCommand(cli:CAC){
     cli.command('start','启动知音')
         .action(async ()=>{
-            try{
-                await promisify(exec(`cd ${basePath} && npm run start:zhin`))
-            }catch (e) {
-                console.error('启动失败')
-                console.error('检查依赖是否正确安装')
-                console.error('错误信息：',e)
-            }
+            const node = spawn('npm', ['run','start:zhin'], { stdio: 'inherit' });
+            node.stdout?.on('data', data => process.stdout.push(data));
+            node.stderr?.on('data', data => process.stderr.push(data));
+            process.stdin?.on('data', data => node.stdin.write(data));
+            node.on('close', code => console.log(`child process exited with code ${code}\n`));
         })
 }

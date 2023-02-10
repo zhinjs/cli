@@ -45,11 +45,3 @@ export function readConfig():Config{
     return yaml.load(readFileSync(configPath,'utf8'))
 }
 export type Config=Partial<typeof defaultConfig>
-
-export async function promisify(cp:ChildProcess){
-    return new Promise((res)=>{
-        cp.stdout.on('data',(data)=>console.log(data))
-        cp.stderr.on('data',(data)=>console.error(data))
-        cp.on('exit',res)
-    })
-}

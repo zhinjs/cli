@@ -1,11 +1,11 @@
 import {CAC} from "cac";
 import {resolve} from "path";
 import {writeFileSync} from 'fs'
-import {exec} from "child_process";
+import {execSync} from "child_process";
 import yaml from 'js-yaml'
 import axios from "axios";
 import inquirer,{DistinctQuestion} from 'inquirer'
-import {hasPackageJson, defaultConfig, basePath, makeDir, saveTo, promisify} from "@/utils";
+import {hasPackageJson, defaultConfig, basePath, makeDir, saveTo} from "@/utils";
 interface AuthorInfo{
     name:string
     username:string
@@ -260,10 +260,10 @@ export default function registerInitCommand(cli:CAC){
             writeFileSync(configPath,yaml.dump(mergedConfig),'utf8')
             console.log('正在安装项目依赖')
             // 装项目运行依赖
-            await promisify(exec(`npm install ${dependencies.join(' ')} --save`,{cwd:projectPath}))
+            execSync(`npm install ${dependencies.join(' ')} --save`,{cwd:projectPath})
             console.log('正在安装开发环境依赖')
             // 装开发依赖
-            await promisify(exec(`npm install ${devDependencies.join(' ')} --save-dev`,{cwd:projectPath}))
+            execSync(`npm install ${devDependencies.join(' ')} --save-dev`,{cwd:projectPath})
             // 建插件目录
             makeDir(resolve(projectPath,config.plugin_dir))
             console.log(`zhin初始化完成,请使用以下命令启动zhin`)
@@ -306,7 +306,7 @@ export async function initProject(projectPath){
         message:'未找到package.json,是否为您创建？'
     })
     if(confirmInit){
-        await promisify(exec('npm init -y',{cwd:projectPath}))
+        execSync('npm init -y',{cwd:projectPath})
     }else{
         throw new Error('终止操作：请手动初始化package.json后重新执行指令')
     }
