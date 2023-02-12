@@ -1,5 +1,5 @@
 import {CAC} from "cac";
-import {exec, execSync} from "child_process";
+import {execSync} from "child_process";
 import {basePath, readConfig} from "@/utils";
 import {resolve} from "path";
 import {existsSync, readFileSync, writeFileSync} from "fs";

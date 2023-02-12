@@ -170,7 +170,7 @@ templateMap.set('js',{
 })
 export default function registerNewPluginCommand(cli:CAC){
     cli.command('new <pluginName>','新建插件')
-        .option('-t,--typescript','插件类型 (ts/js)',{default:'js'})
+        .option('-t,--typescript','插件类型 (ts/js)',{default:false})
         .action((pluginName,options)=>{
             try{
                 const config=readConfig()

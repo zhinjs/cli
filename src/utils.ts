@@ -1,7 +1,6 @@
 import path, {resolve} from "path";
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from "fs";
 import yaml from "js-yaml";
-import {ChildProcess} from "child_process";
 export const basePath=process.cwd()
 export function hasPackageJson(projectPath){
     return existsSync(resolve(projectPath,'package.json'))
@@ -13,13 +12,6 @@ export const defaultConfig={
         }
     },
     plugins:{
-        help: null,
-        config: null,
-        daemon: null,
-        login: null,
-        logs: null,
-        plugin: null,
-        status: null,
         watcher:basePath
     },
     log_level:'info',
