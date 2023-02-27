@@ -4,6 +4,7 @@ import {Config, makeDir, readConfig, replace, saveTo} from "@/utils";
 
 export interface BasePackage {
     name: string
+    setup?:boolean
     version: string
     description: string
 }
@@ -64,9 +65,9 @@ templateMap.set('ts',{
         },
         include: ["./src/"]
     },
-    index:`import {Plugin,Contenxt} from 'zhin';
+    index:`import {Plugin,Context} from 'zhin';
 export const name='{{name}}';
-export function install (this:Plugin,ctx:Contenxt){
+export function install (this:Plugin,ctx:Context){
     // 在这儿实现你的插件逻辑
     // 功能样例：
     //1.定义指令
@@ -108,6 +109,76 @@ export function install (this:Plugin,ctx:Contenxt){
     */
 }`
 });
+templateMap.set('tss',{
+    package:{
+        name:'zhin-plugin-{{name}}',
+        version:'0.0.1',
+        setup:true,
+        main:'src/index.ts',
+        description:'{{name}} plugin',
+        keywords: [
+            "{{name}}",
+            "plugin",
+            "zhin"
+        ],
+        scripts:{
+            build:"tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+            pub:"npm publish --access public"
+        }
+    },
+    tsConfig:{
+        compilerOptions:{
+            outDir: "./lib",
+            rootDir: "./src",
+            baseUrl: ".",
+            target: "ES2020",
+            esModuleInterop: true,
+            module: "commonjs",
+            declaration: true
+        },
+        include: ["./src/"]
+    },
+    index:`import {useContext} from 'zhin';
+
+const ctx=useContext()
+
+//1.定义指令
+/*
+ctx.command('test')
+    .option('foo','-f <bar:string>')
+    .action(({event,options})=>{
+        console.log('options',options);
+        return 'hello world'
+    })
+*/
+// 2.定义中间件
+/*
+ctx.middleware(async (event,next)=>{
+    if(true){ //需要判断的条件
+        //逻辑执行代码
+    }else{
+        next() // 不next，则不会流入下一个中间件
+    }
+});
+*/
+// 3. 监听事件
+/*
+ctx.on(eventName,callback);
+ctx.once(eventName,callback);
+ctx.on(eventName,callback);
+*/
+// 4. 定义服务
+/*
+ctx.service('serviceName'，{}) // 往bot上添加可全局访问的属性
+*/
+// 5. 添加自定插件副作用(在插件卸载时需要执行的代码)
+// 如果不需要，可以不return
+/*
+ctx.on('dispose',()=>{
+    // 如果你使用过react的useEffect 那你应该知道这是在干嘛
+    // 函数内容将会在插件卸载时自动卸载
+})`
+})
 templateMap.set('js',{
     package:{
         name:'zhin-plugin-{{name}}',
@@ -168,25 +239,84 @@ templateMap.set('js',{
     }
 }`
 })
+templateMap.set('jss',{
+    package:{
+        name:'zhin-plugin-{{name}}',
+        version:'0.0.1',
+        setup:true,
+        main:'index.js',
+        description:'{{name}} plugin',
+        keywords: [
+            "{{name}}",
+            "plugin",
+            "zhin"
+        ],
+        scripts:{
+            pub:"npm publish --access public"
+        }
+    },
+    index:`const {useContext}=require('zhin')
+const ctx=useContext()
+// 在这儿实现你的插件逻辑
+// 功能样例：
+// 1.定义指令
+/*
+ctx.command('test')
+    .option('foo','-f <bar:string>')
+    .action(({event,options})=>{
+        console.log('options',options);
+        return 'hello world'
+    })
+*/
+// 2.定义中间件
+/*
+ctx.middleware(async (event,next)=>{
+    if(true){ //需要判断的条件
+        //逻辑执行代码
+    }else{
+        next() // 不next，则不会流入下一个中间件
+    }
+});
+*/
+// 3. 监听事件
+/*
+ctx.on(eventName,callback);
+ctx.once(eventName,callback);
+ctx.on(eventName,callback);
+*/
+// 4. 定义服务
+/*
+ctx.service('serviceName'，{}) // 往bot上添加可全局访问的属性
+*/
+// 5. 添加自定插件副作用(在插件卸载时需要执行的代码)
+// 如果不需要，可以不return
+/*
+ctx.on('dispose',()=>{
+    // 如果你使用过react的useEffect 那你应该知道这是在干嘛
+    // 函数内容将会在插件卸载时自动卸载
+})
+*/`
+})
 export default function registerNewPluginCommand(cli:CAC){
     cli.command('new <pluginName>','新建插件')
-        .option('-t,--typescript','插件类型 (ts/js)',{default:false})
+        .option('-t,--typescript','是否使用ts开发',{default:false})
+        .option('-s,--setup','是否使用setup模式开发',{default:false})
         .action((pluginName,options)=>{
             try{
                 const config=readConfig()
                 if(options.t||options.typescript){
-                    return createTsTemplate(config,pluginName)
+                    return createTsTemplate(config,pluginName,options)
                 }
-                return createJsTemplate(config,pluginName)
+                return createJsTemplate(config,pluginName,options)
             }catch (e){
                 console.error('新建出错，错误信息：',e.message)
             }
             console.log('新建插件完成')
         })
 }
-export async function createJsTemplate(config:Config,name:string){
+export async function createJsTemplate(config:Config,name:string,options:{setup?:boolean}){
     const pluginDir=resolve(process.cwd(),config.plugin_dir,name)
-    const template=templateMap.get('js')
+    const template=templateMap.get(`js${options.setup?'s':''}`)
     // 建立文件夹
     makeDir(pluginDir)
     // 创建package.json
@@ -200,9 +330,9 @@ export async function createJsTemplate(config:Config,name:string){
         name]
     ))
 }
-export async function createTsTemplate(config:Config,name:string){
+export async function createTsTemplate(config:Config,name:string,options:{setup?:boolean}){
     const pluginDir=resolve(process.cwd(),config.plugin_dir,name)
-    const template=templateMap.get('ts')
+    const template=templateMap.get(`ts${options.setup?'s':''}`)
     // 建立插件文件夹
     makeDir(pluginDir)
     const sourceDir=resolve(pluginDir,'src')
