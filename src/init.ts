@@ -161,7 +161,7 @@ const icqqQuestions:DistinctQuestion[]=[
     {
         type:'number',
         message:'请输入机器人登录qq',
-        name:'uin'
+        name:'self_id'
     },{
         type:'confirm',
         name:'isPwdLogin',
