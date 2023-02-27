@@ -4,14 +4,16 @@ import {cac,CAC} from "cac";
 import registerInitCommand from "@/init";
 import registerStartCommand from "@/start";
 import registerNewPluginCommand from "@/new";
-import {registerBuildPluginCommand} from "@/build";
-import {registerPubPluginCommand} from "@/pub";
+import registerDeployCommand from '@/deploy'
+import registerBuildPluginCommand from "@/build";
+import registerPubPluginCommand from "@/pub";
 const cli:CAC=cac()
     .version(require('../package.json').version)
 registerInitCommand(cli)
 registerStartCommand(cli)
 registerNewPluginCommand(cli)
 registerBuildPluginCommand(cli)
+registerDeployCommand(cli)
 registerPubPluginCommand(cli)
 cli.help()
 cli.parse()

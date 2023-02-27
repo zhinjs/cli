@@ -2,7 +2,7 @@ import {CAC} from "cac";
 import {execSync} from "child_process";
 import {readConfig} from "@/utils";
 
-export function registerBuildPluginCommand(cli:CAC){
+export default function registerBuildPluginCommand(cli:CAC){
     cli.command('build <pluginName>','编译插件')
         .action(async (pluginName)=>{
             try{

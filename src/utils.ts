@@ -1,10 +1,52 @@
 import path, {resolve} from "path";
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from "fs";
 import yaml from "js-yaml";
+import fs from "fs";
+import {promisify} from "util";
 export const basePath=process.cwd()
 export function hasPackageJson(projectPath){
     return existsSync(resolve(projectPath,'package.json'))
 }
+export async function copyDir(src:string, dest:string,ignore:string) {
+    const files = await fsp.readdir(src);
+    for(const item of files){
+        const itemPath = path.join(src, item);
+        const itemStat = await fsp.stat(itemPath);// 获取文件信息
+        const savedPath =path.join(dest, item);
+        if (itemStat.isFile()) {
+            await fsp.copyFile(itemPath,savedPath);
+        } else if (itemStat.isDirectory()) {
+            if(ignore && item===ignore) {
+                continue;
+            }
+            await fsp.mkdir(savedPath, {recursive: true});
+            await copyDir(itemPath, savedPath,ignore);
+        }
+    }
+}
+export async function removeDir(dirPath){
+    if(!fs.existsSync(dirPath)) return
+    const fileStat=await fsp.stat(dirPath)
+    if(fileStat.isFile()) return
+    const files=await fsp.readdir(dirPath)
+    for(const file of files){
+        const subDir=path.join(dirPath,file)
+        const stat=await fsp.stat(path.join(dirPath,file))
+        if(stat.isDirectory()){
+            await removeDir(subDir)
+        }else{
+            fsp.unlink(subDir)
+        }
+    }
+    await fsp.rmdir(dirPath)
+}
+
+export const fsp=Object.fromEntries(Object.keys(fs).map(key=>{
+    return [
+        key,
+        typeof fs[key]==='function'?promisify(fs[key]):fs[key]
+    ]
+}))
 export const defaultConfig={
     adapters:{
         icqq:{

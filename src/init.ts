@@ -295,10 +295,6 @@ async function choosePlugins(){
         dependencies.push(plugin)
     }
 }
-function onCancel(){
-    console.log('终止操作:用户取消')
-    process.exit()
-}
 export async function initProject(projectPath){
     const {confirmInit}=await inquirer.prompt({
         type:'confirm',

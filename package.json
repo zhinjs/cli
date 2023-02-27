@@ -1,6 +1,6 @@
 {
     "name": "@zhinjs/cli",
-    "version": "0.2.11",
+    "version": "0.2.16",
     "description": "zhin 脚手架",
     "bin": {
         "zhin": "lib/index.js"
@@ -28,10 +28,12 @@
     },
     "homepage": "https://github.com/zhinjs/cli#readme",
     "devDependencies": {
+        "@types/archiver": "^5.3.1",
         "@types/inquirer": "^9.0.2",
         "@types/js-yaml": "^4.0.5",
         "@types/koa": "^2.13.5",
         "@types/node": "latest",
+        "ssh2-streams": "^0.4.10",
         "ts-node-dev": "latest",
         "tsc-alias": "^1.8.2",
         "tsconfig-paths": "^4.1.2",
@@ -43,9 +45,11 @@
         "/lib/**/LICENSE"
     ],
     "dependencies": {
+        "archiver": "^5.3.1",
         "axios": "^1.1.2",
         "cac": "^6.7.14",
         "inquirer": "~8.2.4",
-        "js-yaml": "^4.1.0"
+        "js-yaml": "^4.1.0",
+        "node-ssh": "^13.0.1"
     }
 }
