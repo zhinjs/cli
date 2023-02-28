@@ -74,14 +74,14 @@ export function install (this:Plugin,ctx:Context){
     /*
     ctx.command('test')
         .option('foo','-f <bar:string>')
-        .action(({event,options})=>{
+        .action(({session,options})=>{
             console.log('options',options);
             return 'hello world'
         })
     */
     // 2.定义中间件
     /*
-    ctx.middleware(async (event,next)=>{
+    ctx.middleware(async (session,next)=>{
         if(true){ //需要判断的条件
         //逻辑执行代码
         }else{
@@ -97,7 +97,7 @@ export function install (this:Plugin,ctx:Context){
     */
     // 4. 定义服务
     /*
-    ctx.service('serviceName'，{}) // 往bot上添加可全局访问的属性
+    ctx.service('serviceName',{}) // 往bot上添加可全局访问的属性
     */
     // 5. 添加自定插件副作用(在插件卸载时需要执行的代码)
     // 如果不需要，可以不return
@@ -146,14 +146,14 @@ const ctx=useContext()
 /*
 ctx.command('test')
     .option('foo','-f <bar:string>')
-    .action(({event,options})=>{
+    .action(({session,options})=>{
         console.log('options',options);
         return 'hello world'
     })
 */
 // 2.定义中间件
 /*
-ctx.middleware(async (event,next)=>{
+ctx.middleware(async (session,next)=>{
     if(true){ //需要判断的条件
         //逻辑执行代码
     }else{
@@ -169,7 +169,7 @@ ctx.on(eventName,callback);
 */
 // 4. 定义服务
 /*
-ctx.service('serviceName'，{}) // 往bot上添加可全局访问的属性
+ctx.service('serviceName',{}) // 往bot上添加可全局访问的属性
 */
 // 5. 添加自定插件副作用(在插件卸载时需要执行的代码)
 // 如果不需要，可以不return
@@ -203,14 +203,14 @@ templateMap.set('js',{
         /*
         ctx.command('test')
             .option('foo','-f <bar:string>')
-            .action(({event,options})=>{
+            .action(({session,options})=>{
                 console.log('options',options);
                 return 'hello world'
             })
         */
         // 2.定义中间件
         /*
-        ctx.middleware(async (event,next)=>{
+        ctx.middleware(async (session,next)=>{
             if(true){ //需要判断的条件
             //逻辑执行代码
             }else{
@@ -226,7 +226,7 @@ templateMap.set('js',{
         */
         // 4. 定义服务
         /*
-        ctx.service('serviceName'，{}) // 往bot上添加可全局访问的属性
+        ctx.service('serviceName',{}) // 往bot上添加可全局访问的属性
         */
         // 5. 添加自定插件副作用(在插件卸载时需要执行的代码)
         // 如果不需要，可以不return
@@ -263,14 +263,14 @@ const ctx=useContext()
 /*
 ctx.command('test')
     .option('foo','-f <bar:string>')
-    .action(({event,options})=>{
+    .action(({session,options})=>{
         console.log('options',options);
         return 'hello world'
     })
 */
 // 2.定义中间件
 /*
-ctx.middleware(async (event,next)=>{
+ctx.middleware(async (session,next)=>{
     if(true){ //需要判断的条件
         //逻辑执行代码
     }else{
@@ -286,7 +286,7 @@ ctx.on(eventName,callback);
 */
 // 4. 定义服务
 /*
-ctx.service('serviceName'，{}) // 往bot上添加可全局访问的属性
+ctx.service('serviceName',{}) // 往bot上添加可全局访问的属性
 */
 // 5. 添加自定插件副作用(在插件卸载时需要执行的代码)
 // 如果不需要，可以不return

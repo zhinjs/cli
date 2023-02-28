@@ -175,7 +175,7 @@ const icqqQuestions:DistinctQuestion[]=[
         message:'请输入机器人登录密码'
     },{
         type:'list',
-        default:4,
+        default:5,
         message:'请选择登录协议',
         name:'platform',
         choices:[
