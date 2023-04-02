@@ -53,12 +53,12 @@ export const defaultConfig={
             bots:[]
         }
     },
-    plugins:{
-        watcher:basePath
-    },
     log_level:'info',
-    plugin_dir:path.join(basePath,'plugins'),
-    data_dir:path.join(basePath,'data'),
+    plugin_dir:'plugins',
+    plugins:{
+      watcher:'.'
+    },
+    data_dir:'data',
     delay:{
         prompt:60000
     }

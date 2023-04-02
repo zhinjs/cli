@@ -6,6 +6,7 @@ export interface BasePackage {
     name: string
     setup?:boolean
     version: string
+    files?:string[]
     description: string
 }
 export type Dict<T extends any=any,K extends string|symbol=string>={
@@ -41,12 +42,17 @@ templateMap.set('ts',{
     package:{
         name:'zhin-plugin-{{name}}',
         version:'0.0.1',
-        main:'src/index.ts',
+        main:'src/index',
         description:'{{name}} plugin',
         keywords: [
             "{{name}}",
             "plugin",
             "zhin"
+        ],
+        files:[
+            "LICENSE",
+            "/src/**/*.js",
+            "/src/**/*.d.ts"
         ],
         scripts:{
             build:"tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
@@ -55,7 +61,7 @@ templateMap.set('ts',{
     },
     tsConfig:{
         compilerOptions:{
-            outDir: "./lib",
+            outDir: "./src",
             rootDir: "./src",
             baseUrl: ".",
             target: "ES2020",
@@ -114,12 +120,17 @@ templateMap.set('tss',{
         name:'zhin-plugin-{{name}}',
         version:'0.0.1',
         setup:true,
-        main:'src/index.ts',
+        main:'src/index',
         description:'{{name}} plugin',
         keywords: [
             "{{name}}",
             "plugin",
             "zhin"
+        ],
+        files:[
+            "LICENSE",
+            "/src/**/*.js",
+            "/src/**/*.d.ts"
         ],
         scripts:{
             build:"tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
@@ -128,7 +139,7 @@ templateMap.set('tss',{
     },
     tsConfig:{
         compilerOptions:{
-            outDir: "./lib",
+            outDir: "./src",
             rootDir: "./src",
             baseUrl: ".",
             target: "ES2020",
@@ -177,7 +188,9 @@ ctx.service('serviceName',{}) // 往bot上添加可全局访问的属性
 ctx.on('dispose',()=>{
     // 如果你使用过react的useEffect 那你应该知道这是在干嘛
     // 函数内容将会在插件卸载时自动卸载
-})`
+})
+*/
+`
 })
 templateMap.set('js',{
     package:{
@@ -190,12 +203,22 @@ templateMap.set('js',{
             "plugin",
             "zhin"
         ],
+        files:[
+            "LICENSE",
+            "/src/**/*.js",
+            "/src/**/*.d.ts"
+        ],
         scripts:{
             pub:"npm publish --access public"
         }
     },
     index:`module.exports={
     name:'{{name}}',
+    /**
+    * 
+    * @param ctx {import('zhin').Context} zhin的上下文
+    * @return dispose {import('zhin').Dispose|void}
+    */
     install(ctx){
         // 在这儿实现你的插件逻辑
         // 功能样例：
@@ -250,6 +273,11 @@ templateMap.set('jss',{
             "{{name}}",
             "plugin",
             "zhin"
+        ],
+        files:[
+            "LICENSE",
+            "/src/**/*.js",
+            "/src/**/*.d.ts"
         ],
         scripts:{
             pub:"npm publish --access public"
