@@ -210,11 +210,13 @@ const icqqQuestions:DistinctQuestion[]=[
 ]
 async function getPackages(){
     let total:number=0,result:Package[]=[]
-    do{
-        const searchResult:Result=await axios.get('https://registry.npmjs.org/-/v1/search?text=zhin+plugin').then(res=>res.data)
-        total=searchResult.total
-        result.push(...searchResult.objects.map(obj=>obj.package))
-    }while (total>result.length)
+    try{
+        do{
+            const searchResult:Result=await axios.get('https://registry.npmjs.org/-/v1/search?text=zhin+plugin').then(res=>res.data)
+            total=searchResult.total
+            result.push(...searchResult.objects.map(obj=>obj.package))
+        }while (total>result.length)
+    }catch {}
     return result
 }
 export default function registerInitCommand(cli:CAC){

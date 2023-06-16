@@ -55,7 +55,7 @@ templateMap.set('ts',{
             "/src/**/*.d.ts"
         ],
         scripts:{
-            build:"tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+            build:"tsc --project tsconfig.json",
             pub:"npm publish --access public"
         }
     },
@@ -133,7 +133,7 @@ templateMap.set('tss',{
             "/src/**/*.d.ts"
         ],
         scripts:{
-            build:"tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+            build:"tsc --project tsconfig.json",
             pub:"npm publish --access public"
         }
     },
