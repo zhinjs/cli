@@ -5,7 +5,7 @@ import {execSync} from "child_process";
 import yaml from 'js-yaml'
 import axios from "axios";
 import inquirer,{DistinctQuestion} from 'inquirer'
-import {hasPackageJson, defaultConfig, basePath, makeDir, saveTo} from "@/utils";
+import {hasPackageJson, defaultConfig, basePath, makeDir, saveTo, hasJsonConfig} from "@/utils";
 interface AuthorInfo{
     name:string
     username:string
@@ -219,6 +219,24 @@ async function getPackages(){
     }catch {}
     return result
 }
+function getConfigJson(projectPath:string){
+    let configJsonName=hasJsonConfig(projectPath)
+    if(!configJsonName){
+        configJsonName='tsconfig.json'
+        saveTo(resolve(projectPath,configJsonName),JSON.stringify({
+            "compilerOptions": {
+                "jsx": "preserve",
+                "jsxFactory": "h",
+                "jsxFragmentFactory": "Element.Fragment",
+                "jsxInject": "import { h, Element } from 'zhin';"
+            }
+        },null,4))
+    }
+    return {
+        path:resolve(projectPath,configJsonName),
+        value:require(resolve(projectPath,configJsonName))
+    }
+}
 export default function registerInitCommand(cli:CAC){
     cli.command('init [projectName]','初始化zhin')
         .action(async (projectName)=>{
@@ -231,12 +249,21 @@ export default function registerInitCommand(cli:CAC){
                 await initProject(projectPath)
             }
             const packageJson=require(resolve(projectPath,'package.json'))
+            const configJson=getConfigJson(projectPath)
             if(!packageJson.scripts) packageJson.scripts={
                 "start:zhin":"start-zhin"
             };
             else{
                 packageJson.scripts['start:zhin']="start-zhin"
             }
+            configJson.value.compilerOptions={
+                ...configJson.value.compilerOptions,
+                "jsx": "preserve",
+                "jsxFactory": "h",
+                "jsxFragmentFactory": "Element.Fragment",
+                "jsxInject": "import { h, Element } from 'zhin';"
+            }
+            saveTo(configJson.path,JSON.stringify(configJson.value,null,4))
             saveTo(resolve(projectPath,'package.json'),JSON.stringify(packageJson,null,4))
             const {adapter,...config}=await inquirer.prompt(questions)
             if(adapter==='icqq'){

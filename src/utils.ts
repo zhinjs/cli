@@ -7,6 +7,15 @@ export const basePath=process.cwd()
 export function hasPackageJson(projectPath){
     return existsSync(resolve(projectPath,'package.json'))
 }
+export function hasJsonConfig(projectPath:string){
+    if(existsSync(resolve(projectPath,'jsconfig.json'))){
+        return 'jsconfig.json'
+    }
+    if(existsSync(resolve(projectPath,'tsconfig.json'))){
+        return 'tsconfig.json'
+    }
+    return ''
+}
 export async function copyDir(src:string, dest:string,ignore:string) {
     const files = await fsp.readdir(src);
     for(const item of files){
