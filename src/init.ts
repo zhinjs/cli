@@ -299,7 +299,7 @@ export default function registerInitCommand(cli:CAC){
             if(projectName){
                 console.log(`cd ${projectName}`)
             }
-            console.log(`zhin start`)
+            console.log(`npm run start:zhin`)
         })
 }
 async function choosePlugins(){
