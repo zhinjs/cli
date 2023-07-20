@@ -84,7 +84,7 @@ export function replace(template:string,[key,value]:[string,string]):string{
 }
 export function readConfig():Config{
     const configPath=resolve(process.cwd(),'zhin.yaml')
-    if(!existsSync(configPath)) throw new Error('未找到配置文件，请确实是否正确初始化了zhin')
+    if(!existsSync(configPath)) throw new Error('未找到配置文件，请确实是否正确初始化了 zhin ？')
     return yaml.load(readFileSync(configPath,'utf8'))
 }
 export type Config=Partial<typeof defaultConfig>

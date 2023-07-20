@@ -1,6 +1,6 @@
 {
     "name": "@zhinjs/cli",
-    "version": "0.2.24",
+    "version": "0.2.25",
     "description": "zhin 脚手架",
     "bin": {
         "zhin": "lib/index.js"

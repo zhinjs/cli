@@ -116,11 +116,11 @@ const remoteStart = async (config: Config) => {
     ssh.dispose()
 };
 export default function registerDeployCommand(cli: CAC) {
-    cli.command('deploy <remoteAddr>', '部署zhin到远程服务器(remoteArr)')
+    cli.command('deploy <remoteAddr>', '部署zhin到远程服务器')
         .option('-u,--uname', '登录用户名', {default: 'root'})
         .option('-p,--upass', '登录密码，不填则使用秘钥登录')
-        .option('-k,--key','登录秘钥文件路径，默认(~/.ssh/{remoteArr}.pem)')
-        .option('-d,--direct', '部署到指定目录，默认(~/{projectName})')
+        .option('-k,--key','登录秘钥文件路径，默认：~/.ssh/{remoteArr}.pem')
+        .option('-d,--direct', '部署到指定目录，默认：~/{projectName}')
         .action(async (remoteArr, options) => {
             await startDeploy({
                 host:remoteArr,

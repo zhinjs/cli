@@ -6,6 +6,7 @@ import yaml from 'js-yaml'
 import axios from "axios";
 import inquirer,{DistinctQuestion} from 'inquirer'
 import {hasPackageJson, defaultConfig, basePath, makeDir, saveTo, hasJsonConfig} from "@/utils";
+import {Dict} from "@/new";
 interface AuthorInfo{
     name:string
     username:string
@@ -50,40 +51,48 @@ const dependencies=['zhin']
 const devDependencies=['@types/koa','tsc-alias','typescript','tsconfig-paths']
 const questions:DistinctQuestion[]=[
     {
-        type:'input',
-        message:'定义插件存放目录(基于项目根目录的相对路径)',
-        default:'plugins',
-        name:'plugin_dir'
-    },{
-        type:'input',
-        message:'定义数据存放目录(基于项目根目录的相对路径)',
-        default:'data',
-        name:'data_dir'
-    },{
         type:'list',
         message:'选择适配器',
         default:'icqq',
         name:'adapter',
         choices:[
             {
-                name:'icqq(内置)，已完成开发',
+                name:'icqq (内置)，已完成开发',
                 value:'icqq'
+            },
+            {
+                name:'onebot ，已完成开发',
+                value:'onebot'
             }
         ]
     }
 ]
 const onebotQuestions:DistinctQuestion[]=[
     {
+        type:'number',
+        message:'填写机器人主人账号，(一般是你自己的账号)',
+        name:'master',
+        validate(input)  {
+            if(!input){
+                return true
+            }
+            if(!/^\d+$/.test(input)){
+                return '请输入正确的账号'
+            }
+            return true
+        }
+    },
+    {
         type:'list',
-        message:'请选择通信方式',
+        message:'请选择 OneBot 通信方式',
         name:'type',
         choices:[
             {
-                name:'HTTP（接受事件有延迟）',
+                name:'HTTP （接受事件有延迟）',
                 value:'http'
             },
             {
-                name:'Webhook（发起动作有延迟）',
+                name:'Webhook （发起动作有延迟）',
                 value:'webhook'
             },
             {
@@ -104,9 +113,16 @@ const onebotQuestions:DistinctQuestion[]=[
     },
     {
         type:'input',
-        name:'self_id',
+        name:'path',
+        when:(answers)=>['webhook','ws_reverse'].includes(answers.type),
+        message:'请输入服务监听路径(/开头)',
+        default:(answers)=>answers.type==='webhook'?'/onebot/webhook':'/onebot/ws/12'
+    },
+    {
+        type:'input',
+        name:'access_token',
         when:(answers)=>['http','ws'].includes(answers.type),
-        message:'请输入机器人唯一标识'
+        message:'请输入 access_token (如果有)'
     },
     {
         type:'number',
@@ -125,42 +141,36 @@ const onebotQuestions:DistinctQuestion[]=[
     {
         type:'number',
         name:'timeout',
-        when:(answers)=>['http'].includes(answers.type),
+        when:(answers)=>['http','webhook'].includes(answers.type),
         message:'请输入请求超时时间（毫秒）',
         default:60000,
     },
     {
         type:'input',
-        name:'path',
-        when:(answers)=>['webhook','ws_reverse'].includes(answers.type),
-        message:'请输入服务监听路径(/开头)',
-        default:(answers)=>answers.type==='webhook'?'/onebot/webhook':'/onebot/ws/12'
-    },
-    {
-        type:'input',
-        name:'self_id_key',
-        when:(answers)=>['webhook','ws_reverse'].includes(answers.type),
-        message:'请输入机器人唯一标识键名',
-        default:'self_id'
-    },
-    {
-        type:'input',
         name:'get_actions_path',
-        when:(answers)=>['webhook','ws_reverse'].includes(answers.type),
+        when:(answers)=>['webhook'].includes(answers.type),
         message:'请输入协议端可获取动作的请求路径(基于服务监听路径)',
         default:'/get_latest_actions'
     },
     {
-        type:'input',
-        name:'access_token',
-        when:(answers)=>['http','ws'].includes(answers.type),
-        message:'请输入access_token(如果有)'
+        type:'number',
+        name:'reconnect_interval',
+        when:(answers)=>['ws','ws_reverse'].includes(answers.type),
+        message:'请输入重连间隔时间（毫秒）',
+        default:3000,
     },
+    {
+        type:'number',
+        name:'max_reconnect_times',
+        when:(answers)=>['ws','ws_reverse'].includes(answers.type),
+        message:'请输入最大重连次数',
+        default:10,
+    }
 ]
 const icqqQuestions:DistinctQuestion[]=[
     {
         type:'number',
-        message:'请输入机器人登录qq',
+        message:'请输入机器人登录 qq',
         name:'self_id'
     },{
         type:'confirm',
@@ -203,9 +213,17 @@ const icqqQuestions:DistinctQuestion[]=[
     },
     {
         type:'number',
-        message:'填写机器人主人qq，(一般是你自己的qq)',
+        message:'填写机器人主人账号，(一般是你自己的账号)',
         name:'master',
-        default:1659488338
+        validate(input)  {
+            if(!input){
+                return true
+            }
+            if(!/^\d+$/.test(input)){
+                return '请输入正确的账号'
+            }
+            return true
+        }
     }
 ]
 async function getPackages(){
@@ -238,15 +256,17 @@ function getConfigJson(projectPath:string){
     }
 }
 export default function registerInitCommand(cli:CAC){
-    cli.command('init [projectName]','初始化zhin')
+    cli.command('init [projectName]','初始化 zhin')
         .action(async (projectName)=>{
             let projectPath=basePath
+            let isNewDir=false
             if(projectName){
                 await makeDir(projectName)
+                isNewDir=true
                 projectPath+=`/${projectName}`
             }
             if(!hasPackageJson(projectPath)){
-                await initProject(projectPath)
+                await initProject(projectPath,!isNewDir)
             }
             const packageJson=require(resolve(projectPath,'package.json'))
             const configJson=getConfigJson(projectPath)
@@ -264,8 +284,11 @@ export default function registerInitCommand(cli:CAC){
                 "jsxInject": "import { h, Element } from 'zhin';"
             }
             saveTo(configJson.path,JSON.stringify(configJson.value,null,4))
-            saveTo(resolve(projectPath,'package.json'),JSON.stringify(packageJson,null,4))
-            const {adapter,...config}=await inquirer.prompt(questions)
+            const config:Dict={
+                plugin_dir:'plugins',
+                data_dir:'data',
+            }
+            const {adapter}=await inquirer.prompt(questions)
             if(adapter==='icqq'){
                 const {isPwdLogin,...firstConfig}=await inquirer.prompt(icqqQuestions)
                 config.adapters={
@@ -280,26 +303,41 @@ export default function registerInitCommand(cli:CAC){
                         bots:[firstConfig]
                     }
                 }
+                packageJson.denpendencies={
+                    ...(packageJson.denpendencies||{}),
+                    "@zhinjs/adapter-onebot": "latest"
+                }
             }
             await choosePlugins()
             const mergedConfig=Object.assign({...defaultConfig},config)
             const configPath=resolve(projectPath,'zhin.yaml')
-            console.log('配置文件已保存到:'+configPath)
-            // 存配置
-            writeFileSync(configPath,yaml.dump(mergedConfig),'utf8')
-            console.log('正在安装项目依赖')
-            // 装项目运行依赖
-            execSync(`npm install ${dependencies.join(' ')} --save`,{cwd:projectPath})
-            console.log('正在安装开发环境依赖')
-            // 装开发依赖
-            execSync(`npm install ${devDependencies.join(' ')} --save-dev`,{cwd:projectPath})
+            packageJson.denpendencies={
+                ...(packageJson.denpendencies||{}),
+                ...(Object.fromEntries(dependencies.map(dep=>{
+                    const [name,version]=dep.split('@')
+                    return [name,version||'latest']
+                })))
+            }
+            packageJson.devDependencies={
+                ...(packageJson.devDependencies||{}),
+                ...(Object.fromEntries(devDependencies.map(dep=>{
+                    const [name,version]=dep.split('@')
+                    return [name,version||'latest']
+                })))
+            }
             // 建插件目录
             makeDir(resolve(projectPath,config.plugin_dir))
-            console.log(`zhin初始化完成,请使用以下命令启动zhin`)
+
+            console.log('配置文件已保存到: '+configPath)
+            // 存配置
+            writeFileSync(configPath,yaml.dump(mergedConfig),'utf8')
+            saveTo(resolve(projectPath,'package.json'),JSON.stringify(packageJson,null,4))
+            console.log(`zhin 初始化完成,请使用以下命令启动 zhin`)
             if(projectName){
-                console.log(`cd ${projectName}`)
+                console.log(`\tcd ${projectName}`)
             }
-            console.log(`npm run start:zhin`)
+            console.log(`\tnpm install`)
+            console.log(`\tzhin start`)
         })
 }
 async function choosePlugins(){
@@ -318,21 +356,33 @@ async function choosePlugins(){
     }])
     for (const plugin of plugins){
         if(plugin.startsWith('@zhinjs/plugin-database')){
-            // todo 让用户自行选择使用什么数据库
-            devDependencies.push('mysql2')
+            // 让用户自行选择使用什么数据库
+            const {database}=await inquirer.prompt([{
+                type:'list',name:'database',message:'选择数据库类型',choices:[
+                    {title:'MySQL',value:'mysql2'},
+                    {title:'SQLite',value:'sqlite3'},
+                    {title:'MariaDB',value:'mariadb'},
+                    {title:'Microsoft SQL Server',value:'tedious'},
+                    {title:'PostgreSQL',value:'pg pg-hstore'},
+                    {title:'DB2',value:'ibm_db'}
+                ],
+                default:'sqlite3'
+            }])
+            devDependencies.push(...database.split(' ').filter(Boolean))
         }
         dependencies.push(plugin)
     }
 }
-export async function initProject(projectPath){
+export async function initProject(projectPath,showConfirm=false){
+    if(!showConfirm) return execSync('npm init -y',{cwd:projectPath})
     const {confirmInit}=await inquirer.prompt({
         type:'confirm',
         name:'confirmInit',
-        message:'未找到package.json,是否为您创建？'
+        message:'未找到 package.json ,是否为您创建？'
     })
     if(confirmInit){
         execSync('npm init -y',{cwd:projectPath})
     }else{
-        throw new Error('终止操作：请手动初始化package.json后重新执行指令')
+        throw new Error('终止操作：请手动初始化 package.json 后重新执行指令')
     }
 }
