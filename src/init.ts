@@ -314,7 +314,8 @@ export default function registerInitCommand(cli:CAC){
             packageJson.denpendencies={
                 ...(packageJson.denpendencies||{}),
                 ...(Object.fromEntries(dependencies.map(dep=>{
-                    const [name,version]=dep.split('@')
+                    let [name,version]=dep.split('@')
+                    if(!name) name=`@${version}`,version='latest'
                     return [name,version||'latest']
                 })))
             }

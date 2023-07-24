@@ -79,7 +79,7 @@ export function install (this:Plugin,ctx:Context){
     //1.定义指令
     /*
     ctx.command('test')
-        .option('foo','-f <bar:string>')
+        .option('-f [bar:string]')
         .action(({session,options})=>{
             console.log('options',options);
             return 'hello world'
@@ -156,7 +156,7 @@ const ctx=useContext()
 //1.定义指令
 /*
 ctx.command('test')
-    .option('foo','-f <bar:string>')
+    .option('-f [bar:string]')
     .action(({session,options})=>{
         console.log('options',options);
         return 'hello world'
@@ -225,7 +225,7 @@ templateMap.set('js',{
         // 1.定义指令
         /*
         ctx.command('test')
-            .option('foo','-f <bar:string>')
+            .option('-f [bar:string]')
             .action(({session,options})=>{
                 console.log('options',options);
                 return 'hello world'
@@ -290,7 +290,7 @@ const ctx=useContext()
 // 1.定义指令
 /*
 ctx.command('test')
-    .option('foo','-f <bar:string>')
+    .option('-f [bar:string]')
     .action(({session,options})=>{
         console.log('options',options);
         return 'hello world'
