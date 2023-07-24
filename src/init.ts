@@ -69,20 +69,6 @@ const questions:DistinctQuestion[]=[
 ]
 const onebotQuestions:DistinctQuestion[]=[
     {
-        type:'number',
-        message:'填写机器人主人账号 (一般是你自己的账号)',
-        name:'master',
-        validate(input)  {
-            if(!input){
-                return true
-            }
-            if(!/^\d+$/.test(input)){
-                return '请输入正确的账号'
-            }
-            return true
-        }
-    },
-    {
         type:'list',
         message:'请选择 OneBot 通信方式',
         name:'type',
@@ -104,6 +90,26 @@ const onebotQuestions:DistinctQuestion[]=[
                 value:'ws_reverse'
             },
         ]
+    },
+    {
+        type:'input',
+        message:'请输入机器人的 self_id',
+        when:(answers)=>['http','ws','ws_reverse'].includes(answers.type),
+        name:'self_id'
+    },
+    {
+        type:'number',
+        message:'填写机器人主人账号 (一般是你自己的账号)',
+        name:'master',
+        validate(input)  {
+            if(!input){
+                return true
+            }
+            if(!/^\d+$/.test(input)){
+                return '请输入正确的账号'
+            }
+            return true
+        }
     },
     {
         type:'input',
