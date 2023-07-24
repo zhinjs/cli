@@ -57,11 +57,11 @@ const questions:DistinctQuestion[]=[
         name:'adapter',
         choices:[
             {
-                name:'icqq (内置)，已完成开发',
+                name:'icqq (内置), 已完成开发',
                 value:'icqq'
             },
             {
-                name:'onebot ，已完成开发',
+                name:'onebot, 已完成开发',
                 value:'onebot'
             }
         ]
@@ -70,7 +70,7 @@ const questions:DistinctQuestion[]=[
 const onebotQuestions:DistinctQuestion[]=[
     {
         type:'number',
-        message:'填写机器人主人账号，(一般是你自己的账号)',
+        message:'填写机器人主人账号 (一般是你自己的账号)',
         name:'master',
         validate(input)  {
             if(!input){
@@ -88,11 +88,11 @@ const onebotQuestions:DistinctQuestion[]=[
         name:'type',
         choices:[
             {
-                name:'HTTP （接受事件有延迟）',
+                name:'HTTP (接受事件有延迟)',
                 value:'http'
             },
             {
-                name:'Webhook （发起动作有延迟）',
+                name:'Webhook (发起动作有延迟)',
                 value:'webhook'
             },
             {
@@ -128,7 +128,7 @@ const onebotQuestions:DistinctQuestion[]=[
         type:'number',
         name:'get_events_interval',
         when:(answers)=>['http'].includes(answers.type),
-        message:'请输入轮询事件间隔时间（毫秒）',
+        message:'请输入轮询事件间隔时间 (毫秒)',
         default:3000
     },
     {
@@ -142,7 +142,7 @@ const onebotQuestions:DistinctQuestion[]=[
         type:'number',
         name:'timeout',
         when:(answers)=>['http','webhook'].includes(answers.type),
-        message:'请输入请求超时时间（毫秒）',
+        message:'请输入请求超时时间 (毫秒)',
         default:60000,
     },
     {
@@ -156,7 +156,7 @@ const onebotQuestions:DistinctQuestion[]=[
         type:'number',
         name:'reconnect_interval',
         when:(answers)=>['ws','ws_reverse'].includes(answers.type),
-        message:'请输入重连间隔时间（毫秒）',
+        message:'请输入重连间隔时间 (毫秒)',
         default:3000,
     },
     {
@@ -213,7 +213,7 @@ const icqqQuestions:DistinctQuestion[]=[
     },
     {
         type:'number',
-        message:'填写机器人主人账号，(一般是你自己的账号)',
+        message:'填写机器人主人账号 (一般是你自己的账号)',
         name:'master',
         validate(input)  {
             if(!input){
@@ -333,7 +333,7 @@ export default function registerInitCommand(cli:CAC){
             // 存配置
             writeFileSync(configPath,yaml.dump(mergedConfig),'utf8')
             saveTo(resolve(projectPath,'package.json'),JSON.stringify(packageJson,null,4))
-            console.log(`zhin 初始化完成,请使用以下命令启动 zhin`)
+            console.log(`zhin 初始化完成, 请使用以下命令启动 zhin`)
             if(projectName){
                 console.log(`\tcd ${projectName}`)
             }
@@ -379,7 +379,7 @@ export async function initProject(projectPath,showConfirm=false){
     const {confirmInit}=await inquirer.prompt({
         type:'confirm',
         name:'confirmInit',
-        message:'未找到 package.json ,是否为您创建？'
+        message:'未找到 package.json, 是否为您创建？'
     })
     if(confirmInit){
         execSync('npm init -y',{cwd:projectPath})
