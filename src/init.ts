@@ -303,16 +303,16 @@ export default function registerInitCommand(cli:CAC){
                         bots:[firstConfig]
                     }
                 }
-                packageJson.denpendencies={
-                    ...(packageJson.denpendencies||{}),
+                packageJson.dependencies={
+                    ...(packageJson.dependencies||{}),
                     "@zhinjs/adapter-onebot": "latest"
                 }
             }
             await choosePlugins()
             const mergedConfig=Object.assign({...defaultConfig},config)
             const configPath=resolve(projectPath,'zhin.yaml')
-            packageJson.denpendencies={
-                ...(packageJson.denpendencies||{}),
+            packageJson.dependencies={
+                ...(packageJson.dependencies||{}),
                 ...(Object.fromEntries(dependencies.map(dep=>{
                     let [name,version]=dep.split('@')
                     if(!name) name=`@${version}`,version='latest'
