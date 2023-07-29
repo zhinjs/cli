@@ -47,8 +47,18 @@ interface Result{
     objects:Obj[]
     total:number
 }
-const dependencies=['zhin']
-const devDependencies=['@types/koa','tsc-alias','typescript','tsconfig-paths']
+const dependencies=['zhin','@zhinjs/client','@zhinjs/plugin-console','icqq']
+const devDependencies=[
+    '@types/koa',
+    "@types/node",
+    "@types/ws",
+    "@types/yaml",
+    "marked",
+    "uuid",
+    'tsc-alias',
+    'typescript',
+    'tsconfig-paths'
+]
 const questions:DistinctQuestion[]=[
     {
         type:'list',
@@ -98,7 +108,7 @@ const onebotQuestions:DistinctQuestion[]=[
         name:'self_id'
     },
     {
-        type:'number',
+        type:'input',
         message:'填写机器人主人账号 (一般是你自己的账号)',
         name:'master',
         validate(input)  {
@@ -277,10 +287,12 @@ export default function registerInitCommand(cli:CAC){
             const packageJson=require(resolve(projectPath,'package.json'))
             const configJson=getConfigJson(projectPath)
             if(!packageJson.scripts) packageJson.scripts={
-                "start:zhin":"start-zhin"
+                "start":"start-zhin",
+                "dev":"start-zhin -d"
             };
             else{
-                packageJson.scripts['start:zhin']="start-zhin"
+                packageJson.scripts['start']="start-zhin"
+                packageJson.scripts['dev']="start-zhin -d"
             }
             configJson.value.compilerOptions={
                 ...configJson.value.compilerOptions,
