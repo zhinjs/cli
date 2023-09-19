@@ -101,7 +101,7 @@ templateMap.set('ts',{
             "lib",
         ],
         scripts:{
-            build:"zhin-client build",
+            build:"tsc --project tsconfig.json && zhin-client build",
             pub:"npm publish --access public"
         }
     },
@@ -189,7 +189,7 @@ templateMap.set('tss',{
             "lib",
         ],
         scripts:{
-            build:"zhin-client build",
+            build:"tsc --project tsconfig.json && zhin-client build",
             pub:"npm publish --access public"
         }
     },
