@@ -30,7 +30,8 @@ export interface Tsconfig {
         module?: string,
         declaration?: boolean,
     }
-    include?:string[]
+    include?:string[],
+    exclude?:string[]
 }
 export interface Template{
     package:PackageJson,
@@ -115,7 +116,13 @@ templateMap.set('ts',{
             module: "commonjs",
             declaration: true
         },
-        include: ["./src/"]
+        include: [
+            "./src/"
+        ],
+        exclude: [
+            "node_modules",
+            "client"
+        ]
     },
     index:`import {Plugin,Context} from 'zhin';
 import * as path from 'path'
@@ -203,7 +210,13 @@ templateMap.set('tss',{
             module: "commonjs",
             declaration: true
         },
-        include: ["./src/"]
+        include: [
+            "./src/"
+        ],
+        exclude: [
+            "node_modules",
+            "client"
+        ]
     },
     index:`import {useContext} from 'zhin';
 import * as path from 'path'    
