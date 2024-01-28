@@ -67,7 +67,7 @@ async function uploadFile(config: Config) {
     })
     console.log('登录远程服务器成功');
     // 为避免第一次时报错，尝试建一下文件夹
-    await ssh.execCommand(`mkdir ${config.direct}`)
+    await ssh.execCommand(`mkdir ${config.direct}`).catch(()=>{})
     // 给服务器上的项目做个备份，避免部署失败时，文件丢失
     await backupProject(config)
     // 上传网站的发布包至configs中配置的远程服务器的指定地址
@@ -117,10 +117,10 @@ const remoteStart = async (config: Config) => {
 };
 export default function registerDeployCommand(cli: CAC) {
     cli.command('deploy <remoteAddr>', '部署zhin到远程服务器')
-        .option('-u,--uname', '登录用户名', {default: 'root'})
-        .option('-p,--upass', '登录密码，不填则使用秘钥登录')
-        .option('-k,--key','登录秘钥文件路径，默认：~/.ssh/{remoteArr}.pem')
-        .option('-d,--direct', '部署到指定目录，默认：~/{projectName}')
+        .option('-u,--uname [uname]', '登录用户名', {default: 'root'})
+        .option('-p,--upass [upass]', '登录密码，不填则使用秘钥登录')
+        .option('-k,--key [key]','登录秘钥文件路径，默认：~/.ssh/{remoteArr}.pem')
+        .option('-d,--direct [direct]', '部署到指定目录，默认：~/{projectName}')
         .action(async (remoteArr, options) => {
             await startDeploy({
                 host:remoteArr,

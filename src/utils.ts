@@ -36,7 +36,7 @@ export async function copyDir(src:string, dest:string,ignore:string) {
 export async function removeDir(dirPath){
     if(!fs.existsSync(dirPath)) return
     const fileStat=await fsp.stat(dirPath)
-    if(fileStat.isFile()) return
+    if(fileStat.isFile()) return fsp.unlink(dirPath)
     const files=await fsp.readdir(dirPath)
     for(const file of files){
         const subDir=path.join(dirPath,file)
