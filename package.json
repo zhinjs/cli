@@ -1,5 +1,5 @@
 {
-    "name": "@zhinjs/cli",
+    "name": "@zhin.js/cli",
     "version": "0.2.34",
     "description": "zhin 脚手架",
     "bin": {
