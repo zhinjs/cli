@@ -14,7 +14,8 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/zhinjs/cli.git"
+        "url": "git+https://github.com/zhinjs/zhin.git",
+        "directory": "basic/cli"
     },
     "keywords": [
         "zhin",
@@ -24,9 +25,9 @@
     "author": "凉菜",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/zhinjs/cli/issues"
+        "url": "https://github.com/zhinjs/zhin/issues"
     },
-    "homepage": "https://github.com/zhinjs/cli#readme",
+    "homepage": "https://github.com/zhinjs/zhin/tree/main/basic/cli#readme",
     "devDependencies": {
         "@types/archiver": "^5.3.1",
         "@types/inquirer": "^9.0.2",
