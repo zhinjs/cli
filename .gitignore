@@ -1,2 +1,7 @@
+node_modules/
+lib/
+dist/
+*.tsbuildinfo
+.DS_Store
+coverage/
 /package-lock.json
-node_modules
