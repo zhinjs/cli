@@ -36,9 +36,15 @@ export const startCommand = new Command('start')
       
       // 启动机器人的函数
       const startBot = async (): Promise<ChildProcess> => {
-        // 设置环境变量
+        // 构建干净的环境变量：剔除 pnpm 注入的 npm_config_* 以免子进程中
+        // npm 读到不认识的配置项而报 warn 甚至阻塞
+        const cleanEnv: Record<string, string | undefined> = {};
+        for (const [key, value] of Object.entries(process.env)) {
+          if (/^npm_/i.test(key)) continue;
+          cleanEnv[key] = value;
+        }
         const env = {
-          ...process.env,
+          ...cleanEnv,
           NODE_ENV: 'production'
         };
         // 配置stdio

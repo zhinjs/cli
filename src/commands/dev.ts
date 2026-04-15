@@ -46,16 +46,21 @@ export const devCommand = new Command('dev')
         // 检测 development 源码是否可用（仅 monorepo 环境）
         const devSourcesAvailable = fs.existsSync(path.join(cwd, 'node_modules/zhin.js/src'));
         
-        // 设置环境变量
-        const nodeOptions = (process.env.NODE_OPTIONS || '')
+        // 构建干净的环境变量：剔除 pnpm 注入的 npm_config_* 以免子进程中
+        // npm 读到不认识的配置项而报 warn 甚至阻塞
+        const cleanEnv: Record<string, string | undefined> = {};
+        for (const [key, value] of Object.entries(process.env)) {
+          if (/^npm_/i.test(key)) continue;
+          cleanEnv[key] = value;
+        }
+        const nodeOptions = (cleanEnv.NODE_OPTIONS || '')
           + (devSourcesAvailable ? ' --conditions=development' : '');
         const env = {
-          ...process.env,
+          ...cleanEnv,
           NODE_ENV: 'development',
           ZHIN_DEV_MODE: 'true',
           ZHIN_HMR_PORT: options.port,
           ZHIN_VERBOSE: options.verbose ? 'true' : 'false',
-          // 仅当框架源码可用时才添加 development 条件（monorepo 环境）
           NODE_OPTIONS: nodeOptions
         };
         
